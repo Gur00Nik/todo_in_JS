@@ -1,27 +1,21 @@
 const containerInput = document.querySelector(".input__container");
-
 const firstCharInInput = document.querySelector(".entered__char").firstChild;
-
 const todoList = document.querySelector(".todo__list");
-
 const buttonDeleteAll = document.querySelector(".delete__all");
-
 const buttonDeleteSpecific = document.querySelector(".delete");
 
 const buttonInput = containerInput.lastElementChild;
-
 const input = containerInput.firstElementChild;
 
-// console.log(containerInput);
-// console.log(buttonInput);
-// console.log(input);
-input.addEventListener("input", () => {
-  valueInput = input.value;
-  firstCharInInput.textContent = valueInput[valueInput.length - 1];
-  return valueInput;
-});
+const getLastCharInInput = () => {
+  let valueInput = input.value;
+  firstCharInInput.textContent = `Ваш последний введенный символ - ${
+    valueInput[valueInput.length - 1]
+  } \n 
+  Введенный текст - ${valueInput}`;
+};
 
-buttonInput.addEventListener("click", () => {
+const addToDo = () => {
   if (input.value.trim() == "") {
     alert("Введите задачу");
   } else {
@@ -34,26 +28,36 @@ buttonInput.addEventListener("click", () => {
     </div>`;
 
     input.value = "";
-
-    let todoItems = document.querySelectorAll(".button__delete");
-
-    todoItems.forEach((todoItem) => {
-      todoItem.addEventListener("click", (event) => {
-        event.target.parentElement.remove();
-      });
-    });
   }
-});
+};
 
-buttonDeleteSpecific.addEventListener("click", () => {
-  // console.log(document.querySelectorAll(".todo__item"));
+const deleteToDo = (event) => {
+  event.target.parentElement.remove();
+};
+
+const deleteSpecificToDo = () => {
   document.querySelectorAll(".todo__item").forEach((item) => {
     if (item.children[2].checked == true) {
       item.remove();
     }
   });
+};
+
+const deleteAllToDo = () => {
+  todoList.innerHTML = "";
+};
+
+input.addEventListener("input", getLastCharInInput);
+
+buttonInput.addEventListener("click", () => {
+  addToDo();
+  let todoItems = document.querySelectorAll(".button__delete");
+
+  todoItems.forEach((todoItem) => {
+    todoItem.addEventListener("click", deleteToDo);
+  });
 });
 
-buttonDeleteAll.addEventListener("click", () => {
-  todoList.innerHTML = "";
-});
+buttonDeleteSpecific.addEventListener("click", deleteSpecificToDo);
+
+buttonDeleteAll.addEventListener("click", deleteAllToDo);
