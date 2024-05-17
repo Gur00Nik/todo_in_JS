@@ -30,6 +30,12 @@ const renderToDoList = () => {
     )
     .join("")}`;
 
+  setAtributeCheckedWithCheckBox();
+
+  // console.log(idSelectedTasks);
+};
+
+const setAtributeCheckedWithCheckBox = () => {
   let idTasks = tasks.map((task) => task.id.toString());
 
   let filteredTasks = idTasks.filter((id) => !idSelectedTasks.includes(id));
@@ -45,6 +51,8 @@ const renderToDoList = () => {
       thisCheckBox.setAttribute("checked", "true");
     }
   });
+  // console.log(filteredTasks);
+  filteredTasks = [];
 };
 
 const addToDo = () => {
@@ -74,8 +82,8 @@ const deleteToDo = (event) => {
   let filteeredTasks = tasks.filter((_, index) => index !== numberToDo);
 
   tasks = filteeredTasks;
-  console.log(numberToDo);
-  console.log(filteeredTasks);
+  // console.log(numberToDo);
+  // console.log(filteeredTasks);
 };
 
 const setEventListener = () => {
@@ -97,6 +105,8 @@ const setEventListener = () => {
       event.target.checked
         ? idSelectedTasks.push(idCheckBox)
         : (idSelectedTasks = idSelectedTasks.filter((id) => id !== idCheckBox));
+
+      console.log(idSelectedTasks);
     });
   });
 };
@@ -143,8 +153,8 @@ const deleteSelectedToDos = () => {
   let filteredTasks = tasks.filter(
     (item) => !idSelectedTasks.map((item) => Number(item)).includes(item.id)
   );
-
   tasks = filteredTasks;
+
 };
 
 const deleteAllToDo = () => {
@@ -153,9 +163,7 @@ const deleteAllToDo = () => {
 
 input.addEventListener("input", getLastCharInInput);
 
-buttonInput.addEventListener("click", () => {
-  addToDoAndRerender();
-});
+buttonInput.addEventListener("click", addToDoAndRerender);
 
 buttonDeleteSpecific.addEventListener("click", deleteSelectedToDosAndRender);
 
