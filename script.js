@@ -9,7 +9,7 @@ const input = containerInput.firstElementChild;
 
 let tasks = [];
 
-let selectedTasks = [];
+let idSelectedTasks = [];
 
 const getLastCharInInput = () => {
   let valueInput = input.value;
@@ -23,12 +23,28 @@ const renderToDoList = () => {
   todoList.innerHTML = `${tasks
     .map(
       ({ text, id }, index) => `<div data-id="${id}" class="todo__item">
-     <div class="todo__text">${index}. ${text}</div>
+     <div class="todo__text">${index}. ${text} . ${id.toString()} </div>
         <button class="button__delete">Удалить</button>
         <input class="input__checkbox"type="checkbox" value="checked"> 
      </div>`
     )
     .join("")}`;
+
+  let idTasks = tasks.map((task) => task.id.toString());
+
+  let filteredTasks = idTasks.filter((id) => !idSelectedTasks.includes(id));
+
+  let allCheckBox = document.querySelectorAll(".input__checkbox");
+
+  allCheckBox.forEach((checkbox, index) => {
+    let thisCheckBox = allCheckBox[index];
+
+    let idCheckBox = checkbox.parentElement.getAttribute("data-id");
+
+    if (!filteredTasks.includes(idCheckBox)) {
+      thisCheckBox.setAttribute("checked", "true");
+    }
+  });
 };
 
 const addToDo = () => {
@@ -62,11 +78,26 @@ const deleteToDo = (event) => {
   console.log(filteeredTasks);
 };
 
-
 const setEventListener = () => {
   let allDeleteButton = document.querySelectorAll(".button__delete");
   allDeleteButton.forEach((button) => {
     button.addEventListener("click", deleteToDoAndRender);
+  });
+
+  let allCheckBox = document.querySelectorAll(".input__checkbox");
+
+  allCheckBox.forEach((checkbox) => {
+    let idCheckBox = checkbox.parentElement.getAttribute("data-id");
+
+    // let thisCheckBox = allCheckBox[index];
+
+    checkbox.addEventListener("change", (event) => {
+      // event.target.parentElement.getAttribute("data-id");
+
+      event.target.checked
+        ? idSelectedTasks.push(idCheckBox)
+        : (idSelectedTasks = idSelectedTasks.filter((id) => id !== idCheckBox));
+    });
   });
 };
 
@@ -101,7 +132,7 @@ const getSelectedToDos = () => {
   allCheckBox.forEach((checkbox) => {
     if (checkbox.checked) {
       let idSelectedTask = checkbox.parentElement.getAttribute("data-id");
-      selectedTasks.push(idSelectedTask);
+      idSelectedTasks.push(idSelectedTask);
     }
   });
 };
@@ -110,7 +141,7 @@ const deleteSelectedToDos = () => {
   getSelectedToDos();
 
   let filteredTasks = tasks.filter(
-    (item) => !selectedTasks.map((item) => Number(item)).includes(item.id)
+    (item) => !idSelectedTasks.map((item) => Number(item)).includes(item.id)
   );
 
   tasks = filteredTasks;
